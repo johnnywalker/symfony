@@ -13,6 +13,7 @@ namespace Symfony\Bundle\AsseticBundle\Twig;
 
 use Assetic\Extension\Twig\AsseticExtension as BaseAsseticExtension;
 use Assetic\Factory\AssetFactory;
+use Assetic\Extension\Twig\AsseticTemplateTokenParser;
 
 /**
  * Assetic extension.
@@ -36,6 +37,8 @@ class AsseticExtension extends BaseAsseticExtension
             new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js', false, array('package')),
             new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css', false, array('package')),
             new AsseticTokenParser($this->factory, 'image', 'images/*', true, array('package')),
+            new AsseticTokenParser($this->factory, 'asset', 'css/*.css', false, array('package'), true),
+            new AsseticTemplateTokenParser('asset_template'),
         );
     }
 
