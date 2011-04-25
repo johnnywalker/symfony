@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="assetic.twig_extension.class">Symfony\Bundle\AsseticBundle\Twig\AsseticExtension</parameter>
-        <parameter key="assetic.twig_formula_loader.class">Assetic\Extension\Twig\TwigFormulaLoader</parameter>
+        <parameter key="assetic.twig_formula_loader.class">Symfony\Bundle\AsseticBundle\Twig\TwigFormulaLoader</parameter>
     </parameters>
 
     <services>

@@ -27,6 +27,7 @@ class FileResource implements ResourceInterface
     protected $bundle;
     protected $baseDir;
     protected $path;
+    protected $logicalName;
 
     protected $template;
 
@@ -59,6 +60,14 @@ class FileResource implements ResourceInterface
     public function __toString()
     {
         return $this->path;
+    }
+
+    public function getLogicalName()
+    {
+        if (null === $this->logicalName)
+            $this->logicalName = $this->getTemplate()->getLogicalName();
+
+        return $this->logicalName;
     }
 
     protected function getTemplate()
