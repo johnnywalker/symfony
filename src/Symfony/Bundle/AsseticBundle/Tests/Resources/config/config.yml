@@ -26,3 +26,5 @@ assetic:
     twig:
         functions:
             yui_css: { output: css/*.css }
+    formulae:
+        - { resource: "%kernel.root_dir%/Resources/assetic/references.yml" }

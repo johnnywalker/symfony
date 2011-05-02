@@ -34,10 +34,10 @@ class AsseticExtension extends BaseAsseticExtension
     public function getTokenParsers()
     {
         return array(
-            new AsseticTokenParser($this->factory, 'javascripts', 'js/*.js', false, array('package')),
-            new AsseticTokenParser($this->factory, 'stylesheets', 'css/*.css', false, array('package')),
-            new AsseticTokenParser($this->factory, 'image', 'images/*', true, array('package')),
-            new AsseticTokenParser($this->factory, 'asset', 'css/*.css', false, array('package'), true),
+            new AsseticTokenParser($this->factory, 'javascripts', static::$defaultOutputs['js'], false, array('package')),
+            new AsseticTokenParser($this->factory, 'stylesheets', static::$defaultOutputs['css'], false, array('package')),
+            new AsseticTokenParser($this->factory, 'image', static::$defaultOutputs['img'], true, array('package')),
+            new AsseticTokenParser($this->factory, 'asset', static::$defaultOutputs, false, array('package'), true),
             new AsseticTemplateTokenParser('asset_template'),
         );
     }

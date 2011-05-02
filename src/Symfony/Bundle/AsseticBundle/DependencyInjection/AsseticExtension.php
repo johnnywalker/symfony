@@ -163,6 +163,13 @@ class AsseticExtension extends Extension
                                 ));
                 }
             }
+            if (!in_array($resource['type'], array('yaml', 'yml'))) {
+                throw new \InvalidArgumentException(sprintf(
+                        'Unsupported resource type: "%s". Supported type(s): (yaml|yml).',
+                        $resource['type']
+                    ));
+                    
+            }
             $resDef = new Definition('%assetic.regular_file_resource.class%');
             $resDef->addTag('assetic.formula_resource', array('loader' => $resource['type']));
             $resDef->addArgument(new Reference('file_locator'));

@@ -1,0 +1,21 @@
+{% extends '::base_asset_templates.html.twig' %}
+
+{% asset_template type='js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endasset_template %}
+
+{% asset_template 'foo' type='img' optional=['alt'] %}
+<img src="{{ asset_url }}" alt="{{ alt|default('image') }}" />
+{% endasset_template %}
+
+{% block stylesheets %}
+    {% asset '@allcss' name='asset_allcss' %}
+{% endblock %}
+
+{% block javascripts %}
+    {% asset '@alljs' type='js' name='asset_alljs' %}
+{% endblock %}
+
+{% block content %}
+    {% asset '@img' template='foo' type='img' output='img/*.png' name='asset_img' %}
+{% endblock %}

@@ -102,19 +102,35 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($crawler->filter('script[src$=".js"]')));
     }
 
+    public function testTwigRenderAssetTemplatesDebug()
+    {
+        $kernel = new TestKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer();
+        $container->enterScope('request');
+        $container->set('request', new Request());
+
+        $content = $container->get('templating')->render('::layout_asset_templates.html.twig');
+        $crawler = new Crawler($content);
+
+        $this->assertEquals(1, count($crawler->filter('link[href$=".css"]')));
+        $this->assertEquals(1, count($crawler->filter('script[src$=".js"]')));
+        $this->assertEquals(1, count($crawler->filter('img[src$=".png"][alt="image"]')));
+    }
+
     public function provideAmDebugAndAssetCount()
     {
         return array(
-            array(true, 3),
-            array(false, 3),
+            array(true, 9),
+            array(false, 9),
         );
     }
 
     public function provideRouterDebugAndAssetCount()
     {
         return array(
-            array(true, 9),
-            array(false, 3),
+            array(true, 24),
+            array(false, 9),
         );
     }
 }

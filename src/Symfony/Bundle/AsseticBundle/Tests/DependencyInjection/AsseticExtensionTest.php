@@ -189,6 +189,35 @@ class AsseticExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->getDumpedContainer();
     }
+    
+    public function testFormulaResources()
+    {
+        $extension = new AsseticExtension();
+        $extension->load(array(array(
+            'formulae' => array(
+                array('resource' => '@MyBundle/Resources/assetic/references.yml'),
+                array('resource' => '@MyBundle/Resources/assetic/test.yml', 'type' => 'yml'),
+            ),
+        )), $this->container);
+
+        $container = $this->getDumpedContainer();
+        $this->assertSaneContainer($container);
+    }
+
+    public function testUnsupportedFormulaResourceType()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        
+        $extension = new AsseticExtension();
+        $extension->load(array(array(
+            'formulae' => array(
+                array('resource' => '@MyBundle/Resources/assetic/test.xml', 'type' => 'xml'),
+            ),
+        )), $this->container);
+
+        $container = $this->getDumpedContainer();
+        $this->assertSaneContainer($container);
+    }
 
     private function getDumpedContainer()
     {

@@ -1,0 +1,10 @@
+## Assetic formula references
+---
+allcss:
+    inputs: ['stylesheet1.css', 'stylesheet2.css', '@TestBundle/Resources/css/bundle.css']
+
+alljs:
+    inputs: ['javascript1.js', javascript2.js']
+    
+img:
+    inputs: 'logo.png'

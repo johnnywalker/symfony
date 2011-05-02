@@ -1,0 +1,18 @@
+{% asset_template %}
+<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+{% endasset_template %}
+{% asset_template 'foo' type='img' %}
+<img src="{{ asset_url }}" alt="" />
+{% endasset_template %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title '' %}</title>
+        {% block stylesheets '' %}
+    </head>
+    <body>
+        {% block content '' %}
+        {% block javascripts '' %}
+    </body>
+</html>

@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\AsseticBundle\Tests\Factory;
 
+use Assetic\AssetManager;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 
 class AssetFactoryTest extends \PHPUnit_Framework_TestCase
@@ -49,6 +50,25 @@ class AssetFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('locateResource')
             ->with('@MyBundle/Resources/css/')
             ->will($this->returnValue('/path/to/bundle/Resources/css/'));
+
+        $this->factory->createAsset($input);
+    }
+    
+    public function testCreateAssetReference()
+    {
+        $container = $this->getMock('Symfony\\Component\DependencyInjection\\ContainerInterface');
+        $am = new AssetManager();
+        
+        $this->kernel->expects($this->once())
+            ->method('getContainer')
+            ->will($this->returnValue($container));
+        
+        $container->expects($this->any())
+            ->method('get')
+            ->with('assetic.asset_manager')
+            ->will($this->returnValue($am));
+        
+        $input = '@foo';
 
         $this->factory->createAsset($input);
     }
