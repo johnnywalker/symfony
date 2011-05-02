@@ -91,6 +91,20 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+                                    
+            // formulae
+            ->fixXmlConfig('formula', 'formulae')
+            ->children()
+                ->arrayNode('formulae')
+                    ->addDefaultsIfNotSet()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('resource')->isRequired()->end()
+                            ->scalarNode('type')->defaultNull()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
         ;
 
         return $builder;

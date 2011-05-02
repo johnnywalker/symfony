@@ -13,6 +13,8 @@
         <parameter key="assetic.coalescing_directory_resource.class">Assetic\Factory\Resource\CoalescingDirectoryResource</parameter>
         <parameter key="assetic.directory_resource.class">Symfony\Bundle\AsseticBundle\Factory\Resource\DirectoryResource</parameter>
         <parameter key="assetic.filter_manager.class">Symfony\Bundle\AsseticBundle\FilterManager</parameter>
+        <parameter key="assetic.regular_file_resource.class">Symfony\Bundle\AsseticBundle\Factory\Resource\RegularFileResource</parameter>
+        <parameter key="assetic.yaml_formula_loader.class">Assetic\Factory\Loader\YamlFormulaLoader</parameter>
 
         <parameter key="assetic.node.paths" type="collection"></parameter>
         <parameter key="assetic.cache_dir">%kernel.cache_dir%/assetic</parameter>
@@ -43,6 +45,15 @@
         <service id="assetic.asset_manager_cache_warmer" class="%assetic.asset_manager_cache_warmer.class%" public="false">
             <tag name="kernel.cache_warmer" priority="10" />
             <argument type="service" id="service_container" />
+        </service>
+
+        <service id="assetic.yaml_formula_loader" class="%assetic.cached_formula_loader.class%" public="false">
+            <tag name="assetic.formula_loader" alias="yaml" />
+            <argument type="service" id="assetic.yaml_formula_loader.real" />
+            <argument type="service" id="assetic.config_cache" />
+            <argument>%kernel.debug%</argument>
+        </service>
+        <service id="assetic.yaml_formula_loader.real" class="%assetic.yaml_formula_loader.class%" public="false">
         </service>
     </services>
 </container>

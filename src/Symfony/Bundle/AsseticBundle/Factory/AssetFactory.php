@@ -51,4 +51,24 @@ class AssetFactory extends BaseAssetFactory
 
         return parent::parseInput($input);
     }
+
+    /**
+     * Adds support for using the lazy asset manager for looking up references
+     * 
+     * @param string $name The name of the asset to reference
+     * @return AssetReference A reference to an asset
+     */
+    protected function createAssetReference($name)
+    {
+        try {
+            return parent::createAssetReference($name);
+        }
+        catch (\LogicException $e) {
+            parent::setAssetManager(
+                    $this->kernel->getContainer()->get('assetic.asset_manager')
+                    );
+            return parent::createAssetReference($name);
+        }
+    }
+    
 }

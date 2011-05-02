@@ -83,7 +83,8 @@ class AsseticExtension extends Extension
         }
 
         // register config resources
-        self::registerFormulaResources($container, $parameterBag->resolveValue($config['bundles']));
+        self::registerFormulaResources($container, $parameterBag->resolveValue($config['bundles']), 
+                $parameterBag->resolveValue($config['formulae']));
     }
 
     /**
@@ -110,7 +111,7 @@ class AsseticExtension extends Extension
      *
      * @throws InvalidArgumentException If registering resources from a bundle that doesn't exist
      */
-    static protected function registerFormulaResources(ContainerBuilder $container, array $bundles)
+    static protected function registerFormulaResources(ContainerBuilder $container, array $bundles, array $resources)
     {
         $map = $container->getParameter('kernel.bundles');
         $am  = $container->getDefinition('assetic.asset_manager');
@@ -137,6 +138,38 @@ class AsseticExtension extends Extension
                     $container->getParameter('kernel.root_dir').'/Resources/views',
                 ))
             );
+        }
+        
+        // other resources (defined in config)
+        foreach ($resources as $resource) {
+            if ($resource['type'] === null) {
+                switch ($ext = pathinfo($resource['resource'], PATHINFO_EXTENSION)) {
+                    case 'yml':
+                        $resource['type'] = 'yaml';
+                        break;
+                    case 'xml':
+                        $resource['type'] = 'xml';
+                        break;
+                    case 'php':
+                        $resource['type'] = 'php';
+                        break;
+                    default:
+                        throw new \InvalidArgumentException(sprintf(
+                                'Unrecognized file extension: "%s". Expected: (yml, xml, php).',
+                                $ext
+                                ));
+                }
+            }
+            $resDef = new Definition('%assetic.regular_file_resource.class%');
+            $resDef->addTag('assetic.formula_resource', array('loader' => $resource['type']));
+            $resDef->addArgument(new Reference('file_locator'));
+            $resDef->addArgument($resource['resource']);
+            $resDef->setPublic(false);
+            
+            $container->setDefinition(
+                    'assetic.formula_resouce.'.$resource['type'].'_'.md5($resource['resource']),
+                    $resDef
+                    );
         }
     }
 
