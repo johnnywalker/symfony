@@ -24,9 +24,9 @@ class AsseticExtension extends BaseAsseticExtension
 {
     private $useController;
 
-    public function __construct(AssetFactory $factory, $debug = false, $useController = false)
+    public function __construct(AssetFactory $factory, $useController = false, $functions = array())
     {
-        parent::__construct($factory, $debug);
+        parent::__construct($factory, $functions);
 
         $this->useController = $useController;
     }
@@ -40,6 +40,11 @@ class AsseticExtension extends BaseAsseticExtension
             new AsseticTokenParser($this->factory, 'asset', 'css/*.css', false, array('package'), true),
             new AsseticTemplateTokenParser('asset_template'),
         );
+    }
+
+    public function getNodeVisitors()
+    {
+        return array(new AsseticNodeVisitor());
     }
 
     public function getGlobals()

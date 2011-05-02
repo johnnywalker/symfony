@@ -23,13 +23,11 @@ use Symfony\Component\Templating\Loader\LoaderInterface;
 class FileResource implements ResourceInterface
 {
     protected $loader;
-    protected $parser;
     protected $bundle;
     protected $baseDir;
     protected $path;
-    protected $logicalName;
-
     protected $template;
+    protected $logicalName;
 
     /**
      * Constructor.

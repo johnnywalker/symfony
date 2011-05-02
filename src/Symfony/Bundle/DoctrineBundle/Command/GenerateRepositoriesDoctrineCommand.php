@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\Output;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 
 /**
@@ -30,13 +29,14 @@ class GenerateRepositoriesDoctrineCommand extends DoctrineCommand
     {
         $this
             ->setName('doctrine:generate:repositories')
-            ->setDescription('Generate repository classes from your mapping information.')
-            ->addArgument('bundle', InputArgument::REQUIRED, 'The bundle to initialize the repositories in.')
-            ->addOption('entity', null, InputOption::VALUE_OPTIONAL, 'The entity class to generate the repository for (shortname without namespace).')
+            ->setDescription('Generate repository classes from your mapping information')
+            ->addArgument('bundle', InputArgument::REQUIRED, 'The bundle to initialize the repositories in')
+            ->addOption('entity', null, InputOption::VALUE_OPTIONAL, 'The entity class to generate the repository for (shortname without namespace)')
             ->setHelp(<<<EOT
-The <info>doctrine:generate:repositories</info> command generates the configured entity repository classes from your mapping information:
+The <info>doctrine:generate:repositories</info> command generates the
+configured entity repository classes from your mapping information:
 
-  <info>./app/console doctrine:generate:repositories</info>
+<info>./app/console doctrine:generate:repositories</info>
 EOT
         );
     }
@@ -46,7 +46,7 @@ EOT
         $bundleName = $input->getArgument('bundle');
         $filterEntity = $input->getOption('entity');
 
-        $foundBundle = $this->findBundle($bundleName);
+        $foundBundle = $this->getApplication()->getKernel()->getBundle($bundleName);
 
         if ($metadatas = $this->getBundleMetadatas($foundBundle)) {
             $output->writeln(sprintf('Generating entity repositories for "<info>%s</info>"', $foundBundle->getName()));
@@ -59,19 +59,17 @@ EOT
 
                 if ($metadata->customRepositoryClassName) {
                     if (strpos($metadata->customRepositoryClassName, $foundBundle->getNamespace()) === false) {
-                        throw new \RuntimeException(
-                            "Repository " . $metadata->customRepositoryClassName . " and bundle don't have a common namespace, ".
-                            "generation failed because the target directory cannot be detected.");
+                        throw new \RuntimeException(sprintf('Repository "%s" and bundle don\'t have a common namespace, generation failed because the target directory cannot be detected.', $metadata->customRepositoryClassName));
                     }
 
                     $output->writeln(sprintf('  > <info>OK</info> generating <comment>%s</comment>', $metadata->customRepositoryClassName));
                     $generator->writeEntityRepositoryClass($metadata->customRepositoryClassName, $this->findBasePathForBundle($foundBundle));
                 } else {
-                    $output->writeln(sprintf('  > <error>SKIP</error> no custom repository for <comment>%s</comment>', $metadata->name));
+                    $output->writeln(sprintf('  > <error>SKIP</error> no custom repository defined for <comment>%s</comment> (no "repositoryClass" option found in the metadata)', $metadata->name));
                 }
             }
         } else {
-            throw new \RuntimeException("Bundle " . $bundleName . " does not contain any mapped entities.");
+            throw new \RuntimeException(sprintf('Bundle "%s" does not contain any mapped entities.', $bundleName));
         }
     }
 }

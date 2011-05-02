@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony package.
  *
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -156,8 +156,6 @@ class DelegatingValidator implements FormValidatorInterface
         $iterator = new \RecursiveIteratorIterator($iterator);
 
         foreach ($iterator as $child) {
-            $path = (string)$child->getAttribute('property_path');
-
             $nestedNamePath = $namePath . $child->getName();
             $forms[$nestedNamePath] = $child;
 
@@ -233,10 +231,6 @@ class DelegatingValidator implements FormValidatorInterface
             $groups = array('Default');
         }
 
-        if (!is_array($groups)) {
-            $groups = array($groups);
-        }
-
-        return $groups;
+        return (array) $groups;
     }
 }
